@@ -1,0 +1,75 @@
+<canvas id="gc" width="400" height="400"></canvas>
+<script>
+    window.onload = function () {
+        bg = document.getElementById("gc");
+        ctx = bg.getContext("2d");
+        document.addEventListener("keydown", keyPush);
+        setInterval(game, 1000 / 15);
+    }
+    pointX = pointY = 10;
+    gs = tc = 20;
+    ax = ay = 15;
+    xv = yv = 0;
+    trail = [];
+    tail = 5;
+
+    function game() {
+        pointX += xv;
+        pointY += yv;
+        if (pointX < 0) {
+            pointX = tc - 1;
+        }
+        if (pointX > tc - 1) {
+            pointX = 0;
+        }
+        if (pointY < 0) {
+            pointY = tc - 1;
+        }
+        if (pointY > tc - 1) {
+            pointY = 0;
+        }
+        ctx.fillStyle = "black";
+        ctx.fillRect(0, 0, bg.width, bg.height);
+
+        ctx.fillStyle = "red";
+        for (let i = 0; i < trail.length; i++) {
+            ctx.fillRect(trail[i].x * gs, trail[i].y * gs, gs - 2, gs - 2);
+            if (trail[i].x === pointX && trail[i].y === pointY) {
+                tail = 5;
+            }
+        }
+        trail.push({x: pointX, y: pointY});
+        while (trail.length > tail) {
+            trail.shift();
+        }
+
+        if (ax === pointX && ay === pointY) {
+            tail++;
+            ax = Math.floor(Math.random() * tc);
+            ay = Math.floor(Math.random() * tc);
+        }
+        ctx.fillStyle = "yellow";
+        ctx.fillRect(ax * gs, ay * gs, gs - 2, gs - 2);
+    }
+
+    function keyPush(event) {
+        switch (event.keyCode) {
+            case 37:
+                xv = -1;
+                yv = 0;
+                break;
+            case 38:
+                xv = 0;
+                yv = -1;
+                break;
+            case 39:
+                xv = 1;
+                yv = 0;
+                break;
+            case 40:
+                xv = 0;
+                yv = 1;
+                break;
+        }
+    }
+</script>
